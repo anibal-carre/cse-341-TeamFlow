@@ -1,0 +1,75 @@
+@baseUrl = http://localhost:8080
+@projectId = REPLACE_WITH_PROJECT_ID
+@taskId = REPLACE_WITH_TASK_ID
+
+### Health
+GET {{baseUrl}}/api/health
+
+### Create project
+POST {{baseUrl}}/api/projects
+Content-Type: application/json
+
+{
+  "name": "Website redesign",
+  "description": "Redesign the company website.",
+  "status": "active",
+  "startDate": "2026-10-10T00:00:00.000Z",
+  "dueDate": "2026-12-01T00:00:00.000Z",
+  "visibility": "private"
+}
+
+### List projects
+GET {{baseUrl}}/api/projects
+
+### Filter projects
+GET {{baseUrl}}/api/projects?status=active&visibility=private
+
+### Get one project
+GET {{baseUrl}}/api/projects/{{projectId}}
+
+### Update project
+PUT {{baseUrl}}/api/projects/{{projectId}}
+Content-Type: application/json
+
+{
+  "status": "completed"
+}
+
+### Delete project
+DELETE {{baseUrl}}/api/projects/{{projectId}}
+
+### Create task (replace projectId with an existing project ID)
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+
+{
+  "projectId": "{{projectId}}",
+  "title": "Create API documentation",
+  "description": "Document all project endpoints.",
+  "status": "todo",
+  "priority": "high",
+  "dueDate": "2026-11-01T00:00:00.000Z"
+}
+
+### List tasks
+GET {{baseUrl}}/api/tasks
+
+### Filter tasks
+GET {{baseUrl}}/api/tasks?status=todo&priority=high
+
+### Get one task
+GET {{baseUrl}}/api/tasks/{{taskId}}
+
+### Update task
+PUT {{baseUrl}}/api/tasks/{{taskId}}
+Content-Type: application/json
+
+{
+  "status": "in_progress"
+}
+
+### Delete task
+DELETE {{baseUrl}}/api/tasks/{{taskId}}
+
+### Swagger OpenAPI JSON
+GET {{baseUrl}}/api-docs.json
