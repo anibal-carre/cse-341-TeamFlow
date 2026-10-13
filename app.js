@@ -41,7 +41,7 @@ app.get("/", (req, res) => res.status(200).json({
   version: "1.1.0",
   documentation: "/api-docs",
   health: "/api/health",
-  authentication: "/auth/github"
+  authentication: { github: "/auth/github", register: "/auth/register", login: "/auth/login", currentUser: "/auth/me", logout: "/auth/logout" }
 }));
 app.get("/api/health", (req, res) => res.status(200).json({
   status: "ok", service: "TeamFlow API", timestamp: new Date().toISOString()

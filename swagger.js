@@ -31,7 +31,7 @@ const options = {
     info: {
       title: "TeamFlow API",
       version: "1.1.0",
-      description: "CSE 341 team project management REST API. Projects, tasks, comments, and memberships support CRUD. Mutations require a GitHub OAuth session."
+      description: "CSE 341 team project management REST API. Projects, tasks, comments, and memberships support CRUD. Sign in using GitHub OAuth or a local email/password account."
     },
     servers: [
       { url: "http://localhost:8080", description: "Local development" },
@@ -43,7 +43,7 @@ const options = {
     ],
     components: {
       securitySchemes: {
-        cookieAuth: { type: "apiKey", in: "cookie", name: "teamflow.sid", description: "Session cookie created after GitHub OAuth login." }
+        cookieAuth: { type: "apiKey", in: "cookie", name: "teamflow.sid", description: "Session cookie created after local login/register or GitHub OAuth." }
       },
       schemas: {
         ProjectInput: {
@@ -136,6 +136,8 @@ const spec = swaggerJsdoc(options);
 spec.paths = {
   ...spec.paths,
   "/api/health": { get: { tags: ["Health"], summary: "Check API health", responses: { "200": { description: "API is running." } } } },
+  "/auth/register": { post: { tags: ["Authentication"], summary: "Create a local account and sign in", requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["displayName", "email", "password"], properties: { displayName: { type: "string", minLength: 2, maxLength: 80, example: "Alex Rivera" }, email: { type: "string", format: "email", example: "alex@example.com" }, password: { type: "string", minLength: 8, maxLength: 128, example: "a-secure-password" } } } } } }, responses: { "201": { description: "Account created and session started." }, "400": { description: "Invalid input." }, "409": { description: "Email already registered." } } } },
+  "/auth/login": { post: { tags: ["Authentication"], summary: "Sign in with email and password", requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["email", "password"], properties: { email: { type: "string", format: "email", example: "alex@example.com" }, password: { type: "string", example: "a-secure-password" } } } } } }, responses: { "200": { description: "Signed in; session cookie is set." }, "400": { description: "Email and password are required." }, "401": { description: "Invalid credentials." } } } },
   "/auth/github": { get: { tags: ["Authentication"], summary: "Start GitHub OAuth login", responses: { "302": { description: "Redirects to GitHub." }, "503": { description: "OAuth is not configured." } } } },
   "/auth/github/callback": { get: { tags: ["Authentication"], summary: "GitHub OAuth callback", responses: { "302": { description: "Redirects after authentication." } } } },
   "/auth/me": { get: { tags: ["Authentication"], summary: "Get the current authenticated user", responses: { "200": { description: "Authenticated user." }, "401": { description: "Not signed in." } } } },
