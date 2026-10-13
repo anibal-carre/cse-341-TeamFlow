@@ -1,0 +1,13 @@
+import { Router } from "express";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { validateBody } from "../middleware/validate.js";
+import { requireAuth } from "../middleware/auth.js";
+import { validateCommentCreate, validateCommentUpdate } from "../validators/comment.validator.js";
+import { getComments, getCommentById, createComment, updateComment, deleteComment } from "../controllers/comments.controller.js";
+const router = Router();
+router.get("/", asyncHandler(getComments));
+router.get("/:id", asyncHandler(getCommentById));
+router.post("/", requireAuth, validateBody(validateCommentCreate), asyncHandler(createComment));
+router.put("/:id", requireAuth, validateBody(validateCommentUpdate), asyncHandler(updateComment));
+router.delete("/:id", requireAuth, asyncHandler(deleteComment));
+export default router;

@@ -1,0 +1,13 @@
+import { Router } from "express";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { validateBody } from "../middleware/validate.js";
+import { requireAuth } from "../middleware/auth.js";
+import { validateMembershipCreate, validateMembershipUpdate } from "../validators/membership.validator.js";
+import { getMemberships, getMembershipById, createMembership, updateMembership, deleteMembership } from "../controllers/memberships.controller.js";
+const router = Router();
+router.get("/", asyncHandler(getMemberships));
+router.get("/:id", asyncHandler(getMembershipById));
+router.post("/", requireAuth, validateBody(validateMembershipCreate), asyncHandler(createMembership));
+router.put("/:id", requireAuth, validateBody(validateMembershipUpdate), asyncHandler(updateMembership));
+router.delete("/:id", requireAuth, asyncHandler(deleteMembership));
+export default router;
